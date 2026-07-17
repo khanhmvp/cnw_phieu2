@@ -41,3 +41,27 @@ function stockLevel(array $product): string {
         return "Can nhap";
     }
 }
+// Lọc danh sách sản phẩm theo category_id (Bài về nhà - Nhiệm vụ A)
+function filterByCategory(array $products, ?int $categoryId): array {
+    if ($categoryId === null) {
+        return $products;
+    }
+    $filtered = [];
+    foreach ($products as $product) {
+        if ($product['category_id'] === $categoryId) {
+            $filtered[] = $product;
+        }
+    }
+    return $filtered;
+}
+
+// Xếp hạng quy mô kho hàng hàng (Bài về nhà - Nhiệm vụ C)
+function rankInventory(int $totalValue): string {
+    if ($totalValue < 15000000) {
+        return "Nho";
+    } elseif ($totalValue < 35000000) {
+        return "Trung binh";
+    } else {
+        return "Lon";
+    }
+}
