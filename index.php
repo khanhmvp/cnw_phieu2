@@ -67,8 +67,8 @@ $warehouseRank= rankInventory($totalInventoryValue);
                     <th>Tên sản phẩm</th>
                     <th>Danh mục</th>
                     <th>Giá (VNĐ)</th>
-                    <th>Số lượng</th>
-                    <th>Mức độ tồn kho</th>
+                    <th>Qty</th>
+                    <th>Muc ton</th>
                 </tr>
             </thead>
             <tbody>
