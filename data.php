@@ -1,20 +1,19 @@
 <?php
+// data.php
 
 $categories = [
     1 => 'Ban phim',
-    2 => 'Chuot',
-    3 => 'Man hinh'
+    2 => 'Man hinh',
+    3 => 'Chuot'
 ];
 
 $products = [
-    ['sku'=>'KB-01','name'=>'Akko 3068','category_id'=>1,'price'=>1200000,'qty'=>3],
-    ['sku'=>'KB-02','name'=>'Keychron K2','category_id'=>1,'price'=>1800000,'qty'=>5],
-    ['sku'=>'KB-03','name'=>'Logitech K120','category_id'=>1,'price'=>150000,'qty'=>2],
-
-    ['sku'=>'MS-01','name'=>'Logitech G102','category_id'=>2,'price'=>400000,'qty'=>10],
-    ['sku'=>'MS-02','name'=>'Razer DeathAdder','category_id'=>2,'price'=>800000,'qty'=>4],
-    ['sku'=>'MS-03','name'=>'Logitech MX Master 3S','category_id'=>2,'price'=>2500000,'qty'=>8],
-
-    ['sku'=>'MN-01','name'=>'Dell Ultrasharp 24','category_id'=>3,'price'=>5500000,'qty'=>2],
-    ['sku'=>'MN-02','name'=>'LG UltraFine','category_id'=>3,'price'=>8500000,'qty'=>1],
+    ['id' => 1, 'category_id' => 1, 'sku' => 'KB-01', 'name' => 'Bàn phím KB-01',  'price' => 1800000, 'qty' => 3],
+    ['id' => 2, 'category_id' => 1, 'sku' => 'KB-02', 'name' => 'Bàn phím KB-02',  'price' => 1200000, 'qty' => 5],
+    ['id' => 3, 'category_id' => 1, 'sku' => 'KB-03', 'name' => 'Bàn phím KB-03',  'price' => 1500000, 'qty' => 2],
+    ['id' => 4, 'category_id' => 3, 'sku' => 'MS-01', 'name' => 'Chuột MS-01',     'price' => 800000,  'qty' => 10],
+    ['id' => 5, 'category_id' => 3, 'sku' => 'MS-02', 'name' => 'Chuột MS-02',     'price' => 2500000, 'qty' => 4],
+    ['id' => 6, 'category_id' => 3, 'sku' => 'MS-03', 'name' => 'Chuột MS-03',     'price' => 1200000, 'qty' => 8],
+    ['id' => 7, 'category_id' => 2, 'sku' => 'MN-01', 'name' => 'Màn hình MN-01', 'price' => 5500000, 'qty' => 2],
+    ['id' => 8, 'category_id' => 2, 'sku' => 'MN-02', 'name' => 'LG UltraFine',   'price' => 8500000, 'qty' => 1],
 ];
