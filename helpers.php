@@ -1,21 +1,13 @@
 <?php
-// helpers.php
+
+declare(strict_types=1);
 
 /**
- * 1. Đánh giá mức tồn kho
- * Logic: >= 5 => 'Du', >= 2 => 'Sap het', còn lại => 'Can nhap'
+ * 1. Tính tổng giá trị của một dòng sản phẩm (Giá * Số lượng)
  */
-function stockLevel(array $product): string 
+function lineTotal(array $product): int
 {
-    $qty = $product['qty'] ?? 0;
-    
-    if ($qty >= 5) {
-        return 'Du';
-    } elseif ($qty >= 2) {
-        return 'Sap het';
-    } else {
-        return 'Can nhap';
-    }
+    return (int)(($product['price'] ?? 0) * ($product['qty'] ?? 0));
 }
 
 /**
@@ -25,9 +17,9 @@ function inventoryValue(array $products): float
 {
     $total = 0;
     foreach ($products as $p) {
-        $total += ($p['price'] * $p['qty']);
+        $total += lineTotal($p);
     }
-    return $total;
+    return (float)$total;
 }
 
 /**
@@ -44,7 +36,56 @@ function findProductBySku(array $products, string $sku): ?array
 }
 
 /**
- * 4. Đánh giá quy mô kho hàng
+ * 4. Đếm số lượng sản phẩm theo danh mục
+ */
+function countByCategory(array $products, int $categoryId): int
+{
+    $count = 0;
+    foreach ($products as $product) {
+        if ((int)($product['category_id'] ?? 0) === $categoryId) {
+            $count++;
+        }
+    }
+    return $count;
+}
+
+/**
+ * 5. Đánh giá mức tồn kho
+ */
+function stockLevel(array $product): string 
+{
+    $qty = $product['qty'] ?? 0;
+    
+    if ($qty >= 5) {
+        return 'Du';
+    } elseif ($qty >= 2) {
+        return 'Sap het';
+    } else {
+        return 'Can nhap';
+    }
+}
+
+/**
+ * 6. Lọc sản phẩm theo danh mục
+ */
+function filterByCategory(array $products, ?int $categoryId): array
+{
+    if ($categoryId === null) {
+        return $products;
+    }
+
+    $filteredProducts = [];
+    foreach ($products as $product) {
+        if ((int)($product['category_id'] ?? 0) === $categoryId) {
+            $filteredProducts[] = $product;
+        }
+    }
+
+    return $filteredProducts;
+}
+
+/**
+ * 7. Đánh giá quy mô kho hàng
  */
 function warehouseRank(float $totalValue): string 
 {
@@ -56,23 +97,47 @@ function warehouseRank(float $totalValue): string
     return 'Nho';
 }
 
+function rankInventory(int $totalValue): string
+{
+    if ($totalValue < 15000000) {
+        return 'Nho';
+    }
+    if ($totalValue < 35000000) {
+        return 'Trung binh';
+    }
+    return 'Lon';
+}
+
 /**
- * 5. Render các dòng <tr>...</tr> cho bảng sản phẩm
+ * 8. Hàm helper escape chống lỗi XSS
+ */
+function e(?string $value): string
+{
+    return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * 9. Render các dòng <tr>...</tr> cho bảng sản phẩm
  */
 function renderProductRows(array $products, array $categories): void 
 {
     foreach ($products as $p) {
-        $catName = $categories[$p['category_id']] ?? 'Khac';
+        $catId = $p['category_id'] ?? null;
+        // Hỗ trợ cả 2 dạng mảng $categories (mảng phẳng hoặc mảng đa chiều)
+        $catName = $categories[$catId] ?? ($categories[$catId]['name'] ?? 'Khac');
+        
         $stock = stockLevel($p);
-        $priceFormatted = number_format($p['price'], 0, ',', '.') . ' VNĐ';
+        $priceFormatted = number_format((float)($p['price'] ?? 0), 0, ',', '.') . ' VNĐ';
+        $lineFormatted = number_format((float)lineTotal($p), 0, ',', '.') . ' VNĐ';
         
         echo "<tr>";
-        echo "<td>{$p['sku']}</td>";
-        echo "<td>{$p['name']}</td>";
-        echo "<td>{$catName}</td>";
-        echo "<td>{$priceFormatted}</td>";
-        echo "<td>{$p['qty']}</td>";
-        echo "<td>{$stock}</td>";
+        echo "<td>" . e((string)($p['sku'] ?? '')) . "</td>";
+        echo "<td>" . e((string)($p['name'] ?? '')) . "</td>";
+        echo "<td>" . e((string)$catName) . "</td>";
+        echo "<td class=\"number\">{$priceFormatted}</td>";
+        echo "<td class=\"number\">" . (int)($p['qty'] ?? 0) . "</td>";
+        echo "<td class=\"number\">{$lineFormatted}</td>";
+        echo "<td>" . e($stock) . "</td>";
         echo "</tr>";
     }
 }
